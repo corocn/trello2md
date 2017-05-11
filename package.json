@@ -1,0 +1,9 @@
+{
+  "name": "trello2md",
+  "version": "0.0.1",
+  "description": "Convert trello boards to markdown text",
+  "main": "index.js",
+  "repository": "git@github.com:corocn/trello2md.git",
+  "author": "corocn <crsk.plmzh@gmail.com>",
+  "license": "MIT"
+}
