@@ -11,7 +11,9 @@ var t = new Trello2md(
 );
 
 if (process.argv.length == 3) {
-  t.fetch(process.argv[2]);
+  t.fetch(process.argv[2]).then(function(lists){
+    console.log(lists);
+  });
 } else {
   console.log('arguments error');
 }
