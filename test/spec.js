@@ -1,5 +1,5 @@
 import test from 'ava'
-import Trello2md from '../index.js'
+import Trello2md from '../lib/trello2md.js'
 import sinon from 'sinon'
 import sinonStubPromise from 'sinon-stub-promise'
 sinonStubPromise(sinon)
@@ -9,7 +9,7 @@ var trello2md = new Trello2md(
   'API_TOKEN',
 );
 
-test.serial('fetch', async(t) => {
+test.serial('#fetch', async(t) => {
   const spy1 = sinon.spy(trello2md, 'getLists')
   const spy2 = sinon.spy(trello2md, 'resolveCards')
   const listsIncludeCards = await trello2md.fetch('BOARD_ID')
@@ -18,13 +18,13 @@ test.serial('fetch', async(t) => {
   t.is(spy2.calledOnce, true)
 });
 
-test.serial('getLists', async(t) => {
+test.serial('#getLists', async(t) => {
   const spy = sinon.spy(trello2md.trello, 'getListsOnBoard')
   const lists = await trello2md.getLists('BOARD_ID')
   t.is(spy.calledOnce, true)
 });
 
-test.serial('resolveCards', async(t) => {
+test.serial('#resolveCards', async(t) => {
   const spy = sinon.spy(trello2md, 'getCard')
   const lists = await trello2md.resolveCards([
     {id: 'ID_1st'},
@@ -34,7 +34,7 @@ test.serial('resolveCards', async(t) => {
   t.is(spy.callCount, 3)
 })
 
-test.serial('getCard', async(t) => {
+test.serial('#getCard', async(t) => {
   const spy = sinon.spy(trello2md.trello, 'getCardsOnList')
   const cards = await trello2md.getCard({id: 'LIST_ID'})
   t.is(spy.calledOnce, true)
