@@ -1,8 +1,19 @@
 import Trello from 'trello';
 
+Trello.prototype.getActionsOnBoard = function (boardId, callback) {
+  return makeRequest(rest.get, this.uri + '/1/boards/' + boardId + '/actions', {query: this.createQuery()}, callback);
+};
+
 export default class Trello2md {
   constructor(key, token) {
     this.trello = new Trello(key, token);
+    this.clear();
+  }
+
+  clear() {
+    this.lists = [];
+    this.cards = [];
+    this.actions = [];
   }
 
   convert(boardId) {
@@ -22,9 +33,11 @@ export default class Trello2md {
         });
       });
 
-      lines.map((line) => { console.log(line)});
+      lines.map((line) => {
+        console.log(line)
+      });
 
-      this.trello.makeRequest('get', '/1/cards/591865973e5bcf4b06f77117/actions', {}).then((result)=>{
+      this.trello.makeRequest('get', '/1/cards/591865973e5bcf4b06f77117/actions', {}).then((result) => {
         console.log(result);
       });
 
@@ -32,12 +45,10 @@ export default class Trello2md {
     });
   }
 
-fetch(boardId) {
-  return this.getLists(boardId)
-    .then(this.resolveCards.bind(this))
-    .catch((error) => {
-      throw error;
-    });
+  fetch(boardId) {
+    this.getActions(boardId).then((data) => {
+      console.log(data);
+    })
   }
 
   getLists(boardId) {
@@ -45,33 +56,24 @@ fetch(boardId) {
       this.trello.getListsOnBoard(boardId)
         .then((lists) => {
           resolve(lists);
-        })
-        .catch((error) => {
-          throw error;
         });
     });
   };
 
-  resolveCards(lists) {
-    let requests = [];
-    if (lists instanceof Array && lists.length > 0) {
-      requests = lists.map((list) => {
-        return this.getCard(list);
-      });
-    }
-    return Promise.all(requests);
+  getCards(boardId) {
+    return new Promise((resolve) => {
+      this.trello.getCardsOnBoard(boardId)
+        .then((cards) => {
+          resolve(cards);
+        });
+    });
   }
 
-  getCard(list) {
+  getActions(boardId) {
     return new Promise((resolve) => {
-      this.trello.getCardsOnList(list.id)
-        .then((cards) => {
-          list.cards = cards;
-          resolve(list);
-        })
-        .catch((error) => {
-          throw error;
-        })
+      this.trello.makeRequest('get', '/1/boards/' + boardId + '/actions', {}).then((actions) => {
+        resolve(actions);
+      });
     });
   }
 }

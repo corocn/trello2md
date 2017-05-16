@@ -15,7 +15,7 @@ if (process.argv.length == 3) {
   // });
   //
 
-  t.convert(process.argv[2]);
+  t.fetch(process.argv[2]);
 
 } else {
   console.log('arguments error');
